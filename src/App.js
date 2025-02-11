@@ -1,9 +1,12 @@
 import React from "react";
 import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
-import Home from "./pages/Home";
-import Products from "./pages/Products";
-import About from "./pages/About";
-import NotFound from "./pages/NotFound";
+import Home from "./pages/Home.js";
+import Products from "./pages/Products.js";
+import About from "./pages/About.js";
+import NotFound from "./pages/NotFound.js";
+import Registration from "./pages/Registration.js";
+import Login from "./pages/Login.js";
+
 
 function App() {
   return (
@@ -20,6 +23,12 @@ function App() {
             <li>
               <Link to="/About">About</Link>
             </li>
+            <li>
+              <Link to="/login">Login</Link> 
+            </li>
+            <li>
+              <Link to='/register'>Registration</Link>
+            </li>
           </ul>
         </nav>
 
@@ -28,6 +37,8 @@ function App() {
           <Route path="/Products" element={<Products />} />
           <Route path="/About" element={<About/>} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/register" element={<Registration />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
     </Router>
