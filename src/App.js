@@ -11,8 +11,11 @@ import ProductDetails from "./pages/ProductDetails.js";
 import CheckoutPage from "./pages/CheckoutPage.js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import OrderHistory from "./pages/OrderHistory.js";
+import dotenv from "dotenv";
 
-const stripePromise = loadStripe('pk_test_51Qs3J4G0oOuLXjdeZ5wUcTNZ64hBGX6PavLT7xaxXuFD4GTjiVgZPZDudP4ZKTGyBKTUBiKfNKhxMB2tfyg5fwed00j9ahC6mZ');
+const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
+dotenv.config();
 
 
 function App() {
@@ -28,6 +31,7 @@ function App() {
             <li style={styles.navItem}><Link to="/login">Login</Link></li>
             <li style={styles.navItem}><Link to="/register">Register</Link></li>
             <li style={styles.navItem}><Link to="/logout">Log out</Link></li>
+            <li style={styles.navItem}><Link to="/order-history">Order History</Link></li>
           </ul>
         </nav>
 
@@ -41,6 +45,7 @@ function App() {
           <Route path="/logout" element={<LogoutButton />} />
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/checkout" element={<CheckoutPage /> } />
+          <Route path="/order-history" element={<OrderHistory /> } />
         </Routes>
       </div>
     </Router>
