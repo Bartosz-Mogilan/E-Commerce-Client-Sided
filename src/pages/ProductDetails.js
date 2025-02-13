@@ -7,7 +7,8 @@ const ProductDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [ product, setProduct ] = useState(null);
-    const [error, setError] = useState(null);
+    const [ error, setError] = useState(null);
+    const [ message, setMessage ] = useState('');
 
     useEffect(() => {
         fetch(`http:localhost:5000/api.products/${id}`)
@@ -27,7 +28,25 @@ const ProductDetails = () => {
         }, [id]);
 
         const handleAddToCart = () => {
-            alert(`Added ${product.name} to cart!`);
+            fetch('http://localhost:5000/api/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ productId: id, quantity: 1 })
+            })
+            .then(response => {
+                if(!response.ok) {
+                    throw new Error('Failed to add product to cart.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                setMessage('Product added to cart');
+            })
+            .catch(err => {
+                console.error(err);
+                setMessage('Error adding product to cart');
+            })
             navigate('/cart');
         };
 
@@ -47,6 +66,7 @@ const ProductDetails = () => {
             <button onClick={handleAddToCart} style={styles.button}>
                 Add to Cart
             </button>
+            {message && <p>{message}</p>}
         </div>
         );
     };

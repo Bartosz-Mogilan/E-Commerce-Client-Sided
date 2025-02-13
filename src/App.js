@@ -8,10 +8,16 @@ import Registration from "./pages/Registration.js";
 import Login from "./pages/Login.js";
 import LogoutButton from "./pages/Logout.js";
 import ProductDetails from "./pages/ProductDetails.js";
+import CheckoutPage from "./pages/CheckoutPage.js";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe('pk_test_51Qs3J4G0oOuLXjdeZ5wUcTNZ64hBGX6PavLT7xaxXuFD4GTjiVgZPZDudP4ZKTGyBKTUBiKfNKhxMB2tfyg5fwed00j9ahC6mZ');
 
 
 function App() {
   return (
+    <Elements stripe={stripePromise}> 
     <Router>
       <div>
       <nav style={styles.nav}>
@@ -34,9 +40,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<LogoutButton />} />
           <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/checkout" element={<CheckoutPage /> } />
         </Routes>
       </div>
     </Router>
+    </Elements>
   );
 };
 

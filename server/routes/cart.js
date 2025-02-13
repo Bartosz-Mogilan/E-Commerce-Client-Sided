@@ -61,7 +61,7 @@ router.post('/remove', ensureAuthenticated, async (req, res) => {
 
 //Checking out cart 
 
-router.post('/checkout', async (req, res) => {
+/*router.post('/checkout', async (req, res) => {
     try {
         const cart = await Cart.findOne({ user: req.user.id, status: 'active' });
         if(!cart) {
@@ -74,6 +74,6 @@ router.post('/checkout', async (req, res) => {
         console.error(error);
         res.status(500).json({ error: 'Server error'});
     }
-});
+}); */
 
 module.exports = router;
