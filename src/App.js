@@ -12,10 +12,10 @@ import CheckoutPage from "./pages/CheckoutPage.js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import OrderHistory from "./pages/OrderHistory.js";
-import dotenv from "dotenv";
 
-const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
-dotenv.config();
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
+console.log(stripePromise);
+
 
 
 function App() {

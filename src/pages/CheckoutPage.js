@@ -1,23 +1,31 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import React, { useState } from 'react';
 
-const CheckoutPage = ({ cartItems, useElements}) => {
+const CheckoutPage = ({ cartItems }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [ error, setError ] = useState('');
     const [ processing, setProcessing ] = useState(false);
     const [ paymentSucceeded, setPaymentSucceeded ] = useState(false);
 
+    const totalAmount = cartItems.reduce(
+      (sum, item) => sum + (item.product.price * item.quantity), 0
+    );
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setProcessing(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/checkout', {
+            const response = await fetch('http://localhost:5000/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: totalAmount })
             });
+
+            if(!response.ok) {
+              throw new Error('Failed to create payment intent');
+            }
 
             const data = await response.json();
             const clientSecret = data.clientSecret;
@@ -40,10 +48,11 @@ const CheckoutPage = ({ cartItems, useElements}) => {
                 }
             }
         } catch (err) {
-            setError('Payment failed: ', + err.message);
+            setError('Payment failed: ' + err.message);
             setProcessing(false);
         }
     };
+
     return (
         <div style={styles.container}>
           <h1>Checkout</h1>
@@ -51,7 +60,7 @@ const CheckoutPage = ({ cartItems, useElements}) => {
             <h3>Your Cart</h3>
             {cartItems && cartItems.length > 0 ? (
               cartItems.map((item) => (
-                <div key={item.product.id} style={styles.cartItem}>
+                <div key={item.product.id || item.product._id} style={styles.cartItem}>
                   <p>{item.product.name} (x{item.quantity})</p>
                 </div>
               ))
@@ -105,5 +114,20 @@ const styles = {
       marginTop: '1rem'
     }
   };
+
+  const cardStyle = {
+    style: {
+        base: {
+            fontSize: '16px',
+            color: '#424770',
+            '::placeholder': {
+                color: '#aab7c4',
+            },
+        },
+        invalid: {
+            color: '#9e2146',
+        },
+    },
+};
 
 export default CheckoutPage;

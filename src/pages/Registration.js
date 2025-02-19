@@ -11,6 +11,11 @@ const Registration = () => {
         e.preventDefault();
         setError(null);
 
+        if(password.length < 6) {
+            setError('Password must be at least 6 characters long.');
+            return;
+        }
+
         try {
             const response = await fetch('/api/register', {
                 method: 'POST',
@@ -28,7 +33,7 @@ const Registration = () => {
                 localStorage.setItem('token', data.token);
             }
 
-            navigate('/');
+            navigate('/login');
 
         } catch(err) {
             setError(err.message);
@@ -36,7 +41,7 @@ const Registration = () => {
     };
 
 return (
-    <div className="registration.container">
+    <div className="registration-container">
         <h2>Create an account</h2>
         {error && <p style ={{ color: 'red'}}>{error}</p>}
 
@@ -56,7 +61,7 @@ return (
                 <label htmlFor="password">Password:</label>
                 <input 
                 id="password"
-                type="text"
+                type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -74,3 +79,4 @@ return (
 };
 
 export default Registration;
+

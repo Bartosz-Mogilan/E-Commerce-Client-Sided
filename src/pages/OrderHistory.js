@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -11,19 +12,27 @@ const OrderHistory = () => {
       .then(response => {
         if (response.status === 401) {
           navigate('/login');
-          return;
+          return Promise.reject(new Error('Unauthorized'));
         }
         if (!response.ok) {
           throw new Error('Failed to fetch order history');
         }
         return response.json();
       })
-      .then(data => setOrders(data))
+      .then(data => {
+        setOrders(data);
+      setLoading(false);
+      })
       .catch(err => {
         console.error(err);
         setError(err.message);
+        setLoading(false);
       });
   }, [navigate]);
+
+  if(loading) {
+    return <div>Loading order history...</div>
+  }
 
   if (error) {
     return <div>Error: {error}</div>;

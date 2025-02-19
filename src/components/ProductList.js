@@ -4,24 +4,31 @@ import Product from './Product';
 const ProductList = () => {
     const [products, setProducts] = useState([]);
     const [error , setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch('hhtp://localhost:500/api/products')
-        .then(response => {
-            if(!response) {
-                throw new Error('Failed to fetch products.');
+        const fetchProducts = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/products');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch products');
+                }
+                const data = await response.json();
+                setProducts(data);
+            } catch (err) {
+                console.error('Error fetching products', err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
-            return response.json();
-        })
-        .then(data => {
-            setProducts(data);
-        })
-        .catch(err => {
-            console.error('Error fetching product', err);
-            setError(err.message);
-        });
+        };
+        fetchProducts();
     }, []);
 
+    if (loading) {
+        return <div>Loading products...</div>;
+    }
+    
     if(error) {
         return <div>Error: {error}</div>
     }
@@ -32,7 +39,7 @@ const ProductList = () => {
                 <p>No product available.</p>
             ) : (
                 products.map(product => (
-                    <Product key={product.id} product={product} />
+                    <Product key={product.id || product._id} product={product} />
                 ))
             )}
         </div>

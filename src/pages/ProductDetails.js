@@ -1,4 +1,3 @@
-import { response } from 'express';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Product from '../components/Product';
@@ -6,24 +5,28 @@ import Product from '../components/Product';
 const ProductDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [ product, setProduct ] = useState(null);
-    const [ error, setError] = useState(null);
-    const [ message, setMessage ] = useState('');
+    const [product, setProduct] = useState(null);
+    const [error, setError] = useState(null);
+    const [message, setMessage] = useState('');
+    set [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`http:localhost:5000/api.products/${id}`)
+        setLoading (true);
+        fetch(`http://localhost:5000/api/products/${id}`)
         .then(response => {
             if(!response.ok) {
-                throw new Error('Failed to fetch product detils');
+                throw new Error('Failed to fetch product details');
             }
             return response.json();
         })
         .then(data => {
             setProduct(data);
+            setLoading(false);
         })
         .catch(err => {
-            console.error('Error detching product:', err);
+            console.error('Error fetching product:', err);
             setError(err.message);
+            setLoading(false);
         });
         }, [id]);
 
@@ -42,17 +45,22 @@ const ProductDetails = () => {
             })
             .then(data => {
                 setMessage('Product added to cart');
+                navigate('/cart');
             })
             .catch(err => {
-                console.error(err);
+                console.error('Add to cart error:', err);
                 setMessage('Error adding product to cart');
             })
-            navigate('/cart');
         };
+
+        if(loading) {
+            return <div>Loading product details....</div>
+        }
 
         if(error) {
             return <div>Error: {error}</div>;
         }
+        
         if(!product) {
             return <div>Loading product details...</div>;
         }

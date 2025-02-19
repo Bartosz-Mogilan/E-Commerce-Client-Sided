@@ -14,7 +14,7 @@ const Login = () => {
         try {
             const response = await fetch('/api/login', {
                 method: 'POST',
-                headers: { ' Content Type': 'application/json'},
+                headers: { 'Content Type': 'application/json'},
                 body: JSON.stringify({ username, password}),
             });
 
@@ -63,7 +63,7 @@ const Login = () => {
                     <label htmlFor='password'>Password</label>
                     <input
                     id="password"
-                    type="text"
+                    type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
