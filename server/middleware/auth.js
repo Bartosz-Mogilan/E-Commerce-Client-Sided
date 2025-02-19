@@ -1,5 +1,5 @@
 function ensureAuthenticated(req, res, next) {
-    if (req.session && req.session.user) {
+    if (req.session && req.user) {
         return next();
     } else {
         console.warn('Unauthorized access attempt: ', req.originalUrl);

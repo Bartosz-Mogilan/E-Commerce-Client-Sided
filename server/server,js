@@ -1,5 +1,3 @@
-import { createSearchIndex } from './models/Cart';
-
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -8,6 +6,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
 const cors = require('cors');
+const MongoStore = require('connect-mongo');
 
 const authRoutes = require('./routes/auth');
 const cartRoutes = require('./routes/cart');
@@ -19,6 +18,13 @@ if(!process.env.SESSION_TICKET || !process.env.PORT) {
     console.error('Missing required environment variables in .env');
     process.exit(1);
 }
+
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));
 
 require('./routes/passport-setup');
 
@@ -37,10 +43,12 @@ app.use(session({
     secret: process.env.SESSION_TICKET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: {
         secure: process.env.NODE_ENV === 'production',
     }
 }));
+
 
 //Using passport
 
