@@ -1,24 +1,10 @@
-const express = require('express');
+import express from "express";
+import { getAllOrders, getOrderById } from "../controllers/ordersController.js";
+import { ensureAuthenticated } from "../middleware/auth.js";
+
 const router = express.Router();
-const Cart = require('../models/Cart');
-const ensureAuthenticated = require('../middleware/auth');
 
-//Getting order history
+router.get("/", ensureAuthenticated, getAllOrders);
+router.get("/:id", ensureAuthenticated, getOrderById);
 
-router.get('/', ensureAuthenticated, async (req, res) => {
-
-    try {
-        const orders = await Cart.find({
-            user: req.user.id,
-            status: 'completed'
-        }).populate('items.product');
-
-        res.json(orders);
-    } catch (error) {
-        console.error('Error fetching order history: ', error);
-        res.status(500).json({ error: 'Server error'});
-    }
-});
-
-module.exports = router;
-
+export default router;

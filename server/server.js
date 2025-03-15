@@ -1,0 +1,52 @@
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerOptions from "./swaggerOptions.js";
+import "./config/db.js"; 
+import passport from "./config/passport.js"; 
+
+dotenv.config();
+
+const PORT = process.env.PORT || 5000;
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(cors({ origin: process.env.FRONTEND_URL || "*"}));
+app.use(passport.initialize());
+
+// Import Routes
+import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/users.js";
+import productRoutes from "./routes/products.js";
+import cartRoutes from "./routes/cart.js";
+import orderRoutes from "./routes/orders.js";
+import checkoutRoutes from "./routes/checkout.js";
+
+// Use Routes
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/checkout", checkoutRoutes);
+
+// Default route
+app.get("/", (req, res) => {
+  res.send("Welcome to the E-Commerce API");
+});
+
+// Swagger Setup
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+export default app;
+
+
+
