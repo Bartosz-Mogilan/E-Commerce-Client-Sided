@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Register a new user
+//Register user
+
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
@@ -28,7 +29,8 @@ export const register = async (req, res) => {
   }
 };
 
-// Log in an existing user
+//Login user
+
 export const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -41,7 +43,7 @@ export const login = async (req, res) => {
     }
     const user = userResult.rows[0];
     if (!user.password) {
-      return res.status(400).json({ error: "Please login using Google" });
+      return res.status(400).json({ error: "Please login using a third-party service" });
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -54,4 +56,10 @@ export const login = async (req, res) => {
     res.status(500).json({ error: "Error logging in" });
   }
 };
+
+//Logout user
+export const logout = (req, res) => {
+  res.json({ message: "Logout successful" });
+};
+
 

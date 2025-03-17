@@ -5,26 +5,24 @@ dotenv.config();
 
 const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
 
-// Creating a Stripe payment intent for the cart
+// Create a Stripe payment intent
 export const createPaymentIntent = async (req, res) => {
-  const { cartId } = req.params;
   try {
     const cartResult = await pool.query(
-      `SELECT c.*, p.price
+      `SELECT c.quantity, p.price
        FROM carts c
        JOIN products p ON c.product_id = p.id
-       WHERE c.id = $1`,
-      [cartId]
+       WHERE c.user_id = $1`,
+      [req.user.id]
     );
     if (cartResult.rows.length === 0) {
-      return res.status(404).json({ error: "Cart not found" });
+      return res.status(404).json({ error: "Cart is empty" });
     }
-    const cartItem = cartResult.rows[0];
-    if (cartItem.user_id !== req.user.id) {
-      return res.status(403).json({ error: "Not authorized" });
-    }
-    let totalPrice = cartItem.quantity * parseFloat(cartItem.price);
+    const totalPrice = cartResult.rows.reduce((sum, item) => {
+      return sum + item.quantity * parseFloat(item.price);
+    }, 0);
     const amountInPence = Math.round(totalPrice * 100);
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amountInPence,
       currency: "gbp",
@@ -36,30 +34,38 @@ export const createPaymentIntent = async (req, res) => {
   }
 };
 
-// Confirm checkout after successful payment
+// Confirm checkout
 export const confirmCheckout = async (req, res) => {
-  const { cartId } = req.params;
   try {
     const cartResult = await pool.query(
       `SELECT c.*, p.price
        FROM carts c
        JOIN products p ON c.product_id = p.id
-       WHERE c.id = $1`,
-      [cartId]
+       WHERE c.user_id = $1`,
+      [req.user.id]
     );
     if (cartResult.rows.length === 0) {
-      return res.status(404).json({ error: "Cart not found" });
+      return res.status(404).json({ error: "Cart is empty" });
     }
-    const cartItem = cartResult.rows[0];
-    if (cartItem.user_id !== req.user.id) {
-      return res.status(403).json({ error: "Not authorized" });
-    }
-    let totalPrice = cartItem.quantity * parseFloat(cartItem.price);
+    const totalPrice = cartResult.rows.reduce((sum, item) => {
+      return sum + item.quantity * parseFloat(item.price);
+    }, 0);
+
     const orderResult = await pool.query(
-      "INSERT INTO orders (user_id, total_price) VALUES ($1, $2) RETURNING *",
-      [req.user.id, totalPrice]
+      "INSERT INTO orders (user_id, total_price, status) VALUES ($1, $2, $3) RETURNING *",
+      [req.user.id, totalPrice, "completed"]
     );
-    await pool.query("DELETE FROM carts WHERE id = $1", [cartId]);
+    const orderId = orderResult.rows[0].id;
+
+    for (const item of cartResult.rows) {
+      await pool.query(
+        "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES ($1, $2, $3, $4)",
+        [orderId, item.product_id, item.quantity, item.price]
+      );
+    }
+
+    await pool.query("DELETE FROM carts WHERE user_id = $1", [req.user.id]);
+
     res.status(200).json({ message: "Checkout confirmed and order created", order: orderResult.rows[0] });
   } catch (error) {
     console.error("Error confirming checkout:", error);
