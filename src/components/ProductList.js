@@ -9,7 +9,7 @@ const ProductList = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/products');
+                const response = await fetch('http://localhost:5000/api/v1/products');
                 if (!response.ok) {
                     throw new Error('Failed to fetch products');
                 }
@@ -36,7 +36,7 @@ const ProductList = () => {
     return (
         <div className='product-list' style={styles.list}>
             {products.length === 0 ? (
-                <p>No product available.</p>
+                <p>No products available.</p>
             ) : (
                 products.map(product => (
                     <Product key={product.id || product._id} product={product} />
@@ -55,3 +55,4 @@ const styles = {
 };
 
 export default ProductList;
+
