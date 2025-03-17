@@ -5,6 +5,8 @@ import pool from "./db.js";
 import dotenv from "dotenv";
 dotenv.config();
 
+//Google Auth
+
 passport.use(
   new GoogleStrategy(
     {
@@ -30,6 +32,8 @@ passport.use(
     }
   )
 );
+
+//Facebook Auth
 
 passport.use(
   new FacebookStrategy(
