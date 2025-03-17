@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.js";
 import Products from "./pages/Products.js";
 import About from "./pages/About.js";
@@ -9,9 +9,10 @@ import Login from "./pages/Login.js";
 import LogoutButton from "./pages/Logout.js";
 import ProductDetails from "./pages/ProductDetails.js";
 import CheckoutPage from "./pages/CheckoutPage.js";
+import OrderHistory from "./pages/OrderHistory.js";
+import NavBar from "./components/NavBar.js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import OrderHistory from "./pages/OrderHistory.js";
 import './App.css';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
@@ -21,23 +22,11 @@ function App() {
     <Elements stripe={stripePromise}> 
       <Router>
         <div>
-          <nav style={styles.nav}>
-            <ul style={styles.navList}>
-              <li style={styles.navItem}><Link to="/">Home</Link></li>
-              <li style={styles.navItem}><Link to="/products">Products</Link></li>
-              <li style={styles.navItem}><Link to="/about">About</Link></li>
-              <li style={styles.navItem}><Link to="/login">Login</Link></li>
-              <li style={styles.navItem}><Link to="/register">Register</Link></li>
-              <li style={styles.navItem}><Link to="/logout">Log out</Link></li>
-              <li style={styles.navItem}><Link to="/order-history">Order History</Link></li>
-              <li style={styles.navItem}><Link to="/checkout">Checkout</Link></li>
-            </ul>
-          </nav>
-
+          <NavBar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
-            <Route path="/about" element={<About/>} />
+            <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Registration />} />
             <Route path="/logout" element={<LogoutButton />} />
@@ -50,25 +39,9 @@ function App() {
       </Router>
     </Elements>
   );
-};
-
-const styles = {
-  nav: {
-    padding: '1rem',
-    background: '#333',
-  },
-  navList: {
-    listStyle: 'none',
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '1rem',
-    margin: 0,
-    padding: 0,
-  },
-  navItem: {
-    margin: '0 0.5rem',
-  },
-};
+}
 
 export default App;
+
+
 

@@ -9,7 +9,7 @@ const LogoutButton = () => {
     const handleLogout = async () => {
         setLoading(true);
         setLogoutError('');
-        try{
+        try {
             const response = await fetch('http://localhost:5000/api/v1/auth/logout', {
                 method: 'GET',
                 credentials: 'include'
@@ -56,5 +56,7 @@ const styles = {
 };
 
 export default LogoutButton;
+
+
 
 
