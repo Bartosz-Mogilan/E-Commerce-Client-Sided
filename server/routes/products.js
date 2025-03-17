@@ -11,3 +11,4 @@ router.put("/:id", ensureAuthenticated, updateProduct);
 router.delete("/:id", ensureAuthenticated, deleteProduct);
 
 export default router;
+

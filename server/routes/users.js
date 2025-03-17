@@ -9,3 +9,4 @@ router.get("/:id", ensureAuthenticated, getUserById);
 router.put("/:id", ensureAuthenticated, updateUser);
 
 export default router;
+

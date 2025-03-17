@@ -4,10 +4,11 @@ import { ensureAuthenticated } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/:cartId", ensureAuthenticated, createPaymentIntent);
-router.post("/:cartId/confirm", ensureAuthenticated, confirmCheckout);
+router.post("/payment-intent", ensureAuthenticated, createPaymentIntent);
+router.post("/confirm", ensureAuthenticated, confirmCheckout);
 
 export default router;
+
 
 
 

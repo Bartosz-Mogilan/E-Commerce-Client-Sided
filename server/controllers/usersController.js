@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-// Get all users
+//Get all users
 export const getAllUsers = async (req, res) => {
   try {
     const result = await pool.query("SELECT id, username, email, created_at FROM users WHERE id = $1", [req.user.id]);
@@ -11,7 +11,7 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// Get a specific user by ID
+//Get a specific user by ID
 export const getUserById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -29,7 +29,7 @@ export const getUserById = async (req, res) => {
   }
 };
 
-// Update a user’s details
+//Update a user’s details
 export const updateUser = async (req, res) => {
   const { id } = req.params;
   const { username, email } = req.body;
