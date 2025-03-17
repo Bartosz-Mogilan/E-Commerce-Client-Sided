@@ -8,7 +8,7 @@ const OrderHistory = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/orders', { credentials: 'include' })
+    fetch('http://localhost:5000/api/v1/orders', { credentials: 'include' })
       .then(response => {
         if (response.status === 401) {
           navigate('/login');
@@ -21,7 +21,7 @@ const OrderHistory = () => {
       })
       .then(data => {
         setOrders(data);
-      setLoading(false);
+        setLoading(false);
       })
       .catch(err => {
         console.error(err);
@@ -46,18 +46,19 @@ const OrderHistory = () => {
     <div style={styles.container}>
       <h1>Your Order History</h1>
       {orders.map(order => (
-        <div key={order._id} style={styles.orderCard}>
-          <h2>Order #{order._id}</h2>
+        <div key={order.id} style={styles.orderCard}>
+          <h2>Order #{order.id}</h2>
           <p>Status: {order.status}</p>
           <h3>Items:</h3>
           {order.items.map(item => (
-            <div key={item._id} style={styles.item}>
+            <div key={item.id} style={styles.item}>
               <p>
-                <strong>{item.product.name}</strong> - Quantity: {item.quantity}
+                <strong>Product ID: {item.product_id}</strong> - Quantity: {item.quantity} - Price: £{item.price}
               </p>
             </div>
           ))}
-          <p>Ordered on: {new Date(order.createdAt).toLocaleDateString()}</p>
+          <p>Ordered on: {new Date(order.created_at).toLocaleDateString()}</p>
+          <p>Total: £{order.total_price}</p>
         </div>
       ))}
     </div>
@@ -74,7 +75,9 @@ const styles = {
     border: '1px solid #ccc',
     borderRadius: '8px',
     padding: '1rem',
-    marginBottom: '1rem'
+    marginBottom: '1rem',
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
   },
   item: {
     padding: '0.5rem 0'
@@ -82,3 +85,4 @@ const styles = {
 };
 
 export default OrderHistory;
+

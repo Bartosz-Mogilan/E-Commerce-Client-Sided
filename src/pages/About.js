@@ -2,11 +2,19 @@ import React from "react";
 
 function About() {
     return (
-        <div>
-            <h1>About us</h1>
-            <p>This is the about us page</p>
+        <div style={styles.container}>
+            <h1>About Us</h1>
+            <p>Welcome to our e-commerce platform.</p>
         </div>
     );
 }
 
+const styles = {
+    container: {
+        padding: '2rem',
+        textAlign: 'center'
+    }
+};
+
 export default About;
+

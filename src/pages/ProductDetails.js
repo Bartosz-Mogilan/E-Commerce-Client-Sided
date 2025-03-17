@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Product from '../components/Product';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -8,11 +7,11 @@ const ProductDetails = () => {
     const [product, setProduct] = useState(null);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState('');
-    set [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        setLoading (true);
-        fetch(`http://localhost:5000/api/products/${id}`)
+        setLoading(true);
+        fetch(`http://localhost:5000/api/v1/products/${id}`)
         .then(response => {
             if(!response.ok) {
                 throw new Error('Failed to fetch product details');
@@ -28,56 +27,56 @@ const ProductDetails = () => {
             setError(err.message);
             setLoading(false);
         });
-        }, [id]);
+    }, [id]);
 
-        const handleAddToCart = () => {
-            fetch('http://localhost:5000/api/cart/add', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ productId: id, quantity: 1 })
-            })
-            .then(response => {
-                if(!response.ok) {
-                    throw new Error('Failed to add product to cart.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                setMessage('Product added to cart');
-                navigate('/cart');
-            })
-            .catch(err => {
-                console.error('Add to cart error:', err);
-                setMessage('Error adding product to cart');
-            })
-        };
+    const handleAddToCart = () => {
+        fetch('http://localhost:5000/api/v1/cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ product_id: id, quantity: 1 })
+        })
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Failed to add product to cart.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setMessage('Product added to cart');
+            navigate('/checkout');
+        })
+        .catch(err => {
+            console.error('Add to cart error:', err);
+            setMessage('Error adding product to cart');
+        })
+    };
 
-        if(loading) {
-            return <div>Loading product details....</div>
-        }
+    if(loading) {
+        return <div>Loading product details...</div>
+    }
 
-        if(error) {
-            return <div>Error: {error}</div>;
-        }
-        
-        if(!product) {
-            return <div>Loading product details...</div>;
-        }
-        
-        return (
+    if(error) {
+        return <div>Error: {error}</div>;
+    }
+    
+    if(!product) {
+        return <div>No product details available.</div>;
+    }
+    
+    return (
         <div style={styles.container}>
             <h1>{product.name}</h1>
             <img src={product.imageUrl} alt={product.name} style={styles.image} />
             <p>{product.description}</p>
-            <p style={styles.price}>Price: ${product.price}</p>
+            <p style={styles.price}>Price: £{product.price}</p>
             <button onClick={handleAddToCart} style={styles.button}>
                 Add to Cart
             </button>
             {message && <p>{message}</p>}
         </div>
-        );
-    };
+    );
+};
 
 const styles = {
     container: {
@@ -97,8 +96,13 @@ const styles = {
     button: {
       padding: '0.8rem 1.2rem',
       fontSize: '1rem',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      backgroundColor: '#28a745',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '4px'
     }
-  };
+};
 
-  export default ProductDetails;
+export default ProductDetails;
+

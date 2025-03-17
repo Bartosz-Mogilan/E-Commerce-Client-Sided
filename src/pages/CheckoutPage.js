@@ -1,34 +1,51 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const CheckoutPage = ({ cartItems }) => {
+const CheckoutPage = () => {
     const stripe = useStripe();
     const elements = useElements();
+    const [ cartItems, setCartItems ] = useState([]);
     const [ error, setError ] = useState('');
     const [ processing, setProcessing ] = useState(false);
-    const [ paymentSucceeded, setPaymentSucceeded ] = useState(false);
+    const [ paymentSucceeded, setPaymentSucceeded] = useState(false);
+    const [ totalAmount, setTotalAmount ] = useState(0);
 
-    const totalAmount = cartItems.reduce(
-      (sum, item) => sum + (item.product.price * item.quantity), 0
-    );
+    useEffect(() => {
+        const fetchCart = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/v1/cart', {
+                    credentials: 'include'
+                });
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cart items');
+                }
+                const data = await response.json();
+                setCartItems(data);
+                const total = data.reduce((sum, item) => sum + item.quantity * parseFloat(item.price), 0);
+                setTotalAmount(total);
+            } catch (err) {
+                console.error('Error fetching cart items:', err);
+                setError(err.message);
+            }
+        };
+        fetchCart();
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         setProcessing(true);
 
         try {
-            const response = await fetch('http://localhost:5000/checkout', {
+            const intentResponse = await fetch('http://localhost:5000/api/v1/checkout/payment-intent', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: totalAmount })
+                credentials: 'include'
             });
-
-            if(!response.ok) {
-              throw new Error('Failed to create payment intent');
+            if (!intentResponse.ok) {
+                throw new Error('Failed to create payment intent');
             }
-
-            const data = await response.json();
-            const clientSecret = data.clientSecret;
+            const intentData = await intentResponse.json();
+            const clientSecret = intentData.clientSecret;
 
             const cardElement = elements.getElement(CardElement);
             const result = await stripe.confirmCardPayment(clientSecret, {
@@ -42,9 +59,18 @@ const CheckoutPage = ({ cartItems }) => {
                 setProcessing(false);
             } else {
                 if(result.paymentIntent.status === 'succeeded') {
+                    const confirmResponse = await fetch('http://localhost:5000/api/v1/checkout/confirm', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include'
+                    });
+                    if(!confirmResponse.ok) {
+                        throw new Error('Checkout confirmation failed');
+                    }
                     setPaymentSucceeded(true);
                     setError('');
                     setProcessing(false);
+                    setCartItems([]);
                 }
             }
         } catch (err) {
@@ -60,14 +86,14 @@ const CheckoutPage = ({ cartItems }) => {
             <h3>Your Cart</h3>
             {cartItems && cartItems.length > 0 ? (
               cartItems.map((item) => (
-                <div key={item.product.id || item.product._id} style={styles.cartItem}>
-                  <p>{item.product.name} (x{item.quantity})</p>
+                <div key={item.id} style={styles.cartItem}>
+                  <p>{item.name} (x{item.quantity}) - £{item.price}</p>
                 </div>
               ))
             ) : (
               <p>Your cart is empty.</p>
             )}
-            <h4>Total: £{(totalAmount / 100).toFixed(2)}</h4>
+            <h4>Total: £{totalAmount.toFixed(2)}</h4>
           </div>
           <form onSubmit={handleSubmit} style={styles.form}>
             <CardElement options={cardStyle} />
@@ -85,7 +111,10 @@ const styles = {
     container: {
       padding: '2rem',
       maxWidth: '500px',
-      margin: '0 auto'
+      margin: '0 auto',
+      backgroundColor: '#f9f9f9',
+      borderRadius: '8px',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
     },
     cart: {
       marginBottom: '2rem'
@@ -97,7 +126,8 @@ const styles = {
     form: {
       border: '1px solid #ccc',
       borderRadius: '8px',
-      padding: '1rem'
+      padding: '1rem',
+      backgroundColor: '#fff'
     },
     error: {
       color: 'red',
@@ -107,15 +137,19 @@ const styles = {
       marginTop: '1rem',
       padding: '0.8rem 1.2rem',
       fontSize: '1rem',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      backgroundColor: '#007bff',
+      color: '#fff',
+      border: 'none',
+      borderRadius: '4px'
     },
     success: {
       color: 'green',
       marginTop: '1rem'
     }
-  };
+};
 
-  const cardStyle = {
+const cardStyle = {
     style: {
         base: {
             fontSize: '16px',

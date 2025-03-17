@@ -10,12 +10,11 @@ const LogoutButton = () => {
         setLoading(true);
         setLogoutError('');
         try{
-            const response = await fetch('/api/logout', {
+            const response = await fetch('http://localhost:5000/api/v1/auth/logout', {
                 method: 'GET',
                 credentials: 'include'
             });
             if(response.ok) {
-                console.log('Logged out successfully');
                 localStorage.removeItem('token');
                 navigate('/login');
             } else {
@@ -31,8 +30,8 @@ const LogoutButton = () => {
     };
 
     return (
-        <div>
-            <button onClick={handleLogout} disabled={loading}>
+        <div style={styles.container}>
+            <button onClick={handleLogout} disabled={loading} style={styles.button}>
                 {loading ? 'Logging out...' : 'Logout'}
             </button>
             {logoutError && <p style={{ color: 'red'}}>{logoutError}</p>}
@@ -40,4 +39,22 @@ const LogoutButton = () => {
     )
 };
 
+const styles = {
+    container: {
+        textAlign: 'center',
+        marginTop: '2rem'
+    },
+    button: {
+        padding: '0.8rem 1.2rem',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        backgroundColor: '#dc3545',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '4px'
+    }
+};
+
 export default LogoutButton;
+
+

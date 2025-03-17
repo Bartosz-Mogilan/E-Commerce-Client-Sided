@@ -21,6 +21,7 @@ const styles = {
     container: {
         textAlign: 'center',
         padding: '2rem',
+        backgroundColor: '#f2f2f2'
     },
     productListContainer: {
         display: 'grid',
@@ -33,8 +34,12 @@ const styles = {
         fontSize: '1rem',
         marginBottom: '1rem',
         width: '80%',
+        borderRadius: '4px',
+        border: '1px solid #ccc'
     },
 };
 
 export default Products;
+
+
 
