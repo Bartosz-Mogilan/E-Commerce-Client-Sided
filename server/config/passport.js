@@ -5,8 +5,7 @@ import pool from "./db.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-//Google Auth
-
+// Google Auth
 passport.use(
   new GoogleStrategy(
     {
@@ -33,15 +32,14 @@ passport.use(
   )
 );
 
-//Facebook Auth
-
+// Facebook Auth
 passport.use(
   new FacebookStrategy(
     {
       clientID: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
       callbackURL: process.env.FACEBOOK_CALLBACK_URL,
-      profileFields: ['id', 'displayName', 'emails']
+      profileFields: ["id", "displayName", "emails"],
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -64,5 +62,6 @@ passport.use(
 );
 
 export default passport;
+
 
 

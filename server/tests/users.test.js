@@ -1,4 +1,3 @@
-// tests/users.test.js
 import request from "supertest";
 import app from "../server.js";
 import pool from "../config/db.js";

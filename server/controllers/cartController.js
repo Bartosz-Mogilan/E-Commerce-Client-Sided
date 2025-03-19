@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-//Add an item to the cart 
+// Add an item to the cart
 export const addCartItem = async (req, res) => {
   const { product_id, quantity } = req.body;
   const user_id = req.user.id;
@@ -28,7 +28,7 @@ export const addCartItem = async (req, res) => {
   }
 };
 
-//Get all cart items
+// Get all cart items
 export const getCart = async (req, res) => {
   try {
     const result = await pool.query(
@@ -44,3 +44,4 @@ export const getCart = async (req, res) => {
     res.status(500).json({ error: "Error retrieving cart" });
   }
 };
+

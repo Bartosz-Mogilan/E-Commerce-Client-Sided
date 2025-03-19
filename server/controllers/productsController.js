@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-//Get all products
+// Get all products
 export const getAllProducts = async (req, res) => {
   const { category, limit, offset } = req.query;
   try {
@@ -23,7 +23,7 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
-//Get a product by its ID
+// Get a product by its ID
 export const getProductById = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
@@ -43,7 +43,7 @@ export const getProductById = async (req, res) => {
   }
 };
 
-//Create a new product
+// Create a new product
 export const createProduct = async (req, res) => {
   const { name, description, price, stock, category, imageUrl } = req.body;
   if (!name || !description || !price || !stock || !category) {
@@ -61,7 +61,7 @@ export const createProduct = async (req, res) => {
   }
 };
 
-//Update an existing product
+// Update an existing product
 export const updateProduct = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const { name, description, price, stock, category, imageUrl } = req.body;
@@ -85,7 +85,7 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-//Delete a product
+// Delete a product
 export const deleteProduct = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
@@ -102,3 +102,4 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ error: "Error deleting product" });
   }
 };
+

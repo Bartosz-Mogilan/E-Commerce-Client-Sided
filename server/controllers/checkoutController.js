@@ -5,7 +5,7 @@ dotenv.config();
 
 const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
 
-//Create a Stripe payment intent
+// Create a Stripe payment intent
 export const createPaymentIntent = async (req, res) => {
   try {
     const cartResult = await pool.query(
@@ -34,7 +34,7 @@ export const createPaymentIntent = async (req, res) => {
   }
 };
 
-//Confirm checkout
+// Confirm checkout
 export const confirmCheckout = async (req, res) => {
   try {
     const cartResult = await pool.query(

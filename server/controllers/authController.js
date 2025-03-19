@@ -4,8 +4,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-//Register user
-
+// Register user
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
@@ -29,8 +28,7 @@ export const register = async (req, res) => {
   }
 };
 
-//Login user
-
+// Login user
 export const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -57,7 +55,7 @@ export const login = async (req, res) => {
   }
 };
 
-//Logout user
+// Logout user
 export const logout = (req, res) => {
   res.json({ message: "Logout successful" });
 };

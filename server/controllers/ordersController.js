@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 
-//Get all orders with order items
+// Get all orders with order items
 export const getAllOrders = async (req, res) => {
   try {
     const result = await pool.query(
@@ -24,7 +24,7 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
-//Get an order by ID with order items
+// Get an order by ID with order items
 export const getOrderById = async (req, res) => {
   const { id } = req.params;
   try {
@@ -50,4 +50,5 @@ export const getOrderById = async (req, res) => {
     res.status(500).json({ error: "Error retrieving order" });
   }
 };
+
 
