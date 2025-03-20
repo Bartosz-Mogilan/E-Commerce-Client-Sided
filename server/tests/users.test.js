@@ -13,7 +13,7 @@ beforeAll(async () => {
 });
 
 describe("Users Endpoints", () => {
-  it("should get the current user details", async () => {
+  it("should get all users", async () => {
     const res = await request(app)
       .get("/api/v1/users")
       .set("Authorization", `Bearer ${validToken}`);
@@ -28,8 +28,6 @@ describe("Users Endpoints", () => {
     expect([200, 404, 403]).toContain(res.statusCode);
   });
 });
-
-
 
 
 

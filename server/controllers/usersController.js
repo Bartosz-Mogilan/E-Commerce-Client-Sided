@@ -3,7 +3,7 @@ import pool from "../config/db.js";
 // Get all users
 export const getAllUsers = async (req, res) => {
   try {
-    const result = await pool.query("SELECT id, username, email, created_at FROM users WHERE id = $1", [req.user.id]);
+    const result = await pool.query("SELECT id, username, email, created_at FROM users");
     res.status(200).json(result.rows);
   } catch (error) {
     console.error("Error retrieving users:", error);

@@ -19,9 +19,13 @@ passport.use(
         if (result.rows.length > 0) {
           return done(null, result.rows[0]);
         } else {
+          const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+          if (!email) {
+            console.warn("Google profile does not contain an email.");
+          }
           const newUserResult = await pool.query(
             "INSERT INTO users (username, email, google_id) VALUES ($1, $2, $3) RETURNING *",
-            [profile.displayName, profile.emails[0].value, profile.id]
+            [profile.displayName, email, profile.id]
           );
           return done(null, newUserResult.rows[0]);
         }
@@ -48,6 +52,9 @@ passport.use(
           return done(null, result.rows[0]);
         } else {
           const email = profile.emails && profile.emails[0] ? profile.emails[0].value : null;
+          if (!email) {
+            console.warn("Facebook profile does not contain email.")
+          }
           const newUserResult = await pool.query(
             "INSERT INTO users (username, email, facebook_id) VALUES ($1, $2, $3) RETURNING *",
             [profile.displayName, email, profile.id]
