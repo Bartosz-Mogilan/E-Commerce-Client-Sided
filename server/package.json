@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "Backend for the eCommerce app",
     "main": "server.js",
+    "type": "module",
     "scripts": {
         "start": "node server.js",
         "dev": "nodemon server.js",
@@ -25,13 +26,9 @@
     "devDependencies": {
         "@babel/preset-env": "^7.26.9",
         "babel-jest": "^29.7.0",
-        "jest": "^27.5.1",
+        "jest": "^29.7.0",
         "nodemon": "^2.0.22",
         "supertest": "^6.3.3"
-    },
-    "jest": {
-        "transform": {
-            "^.+\\.js$": "babel-jest"
-        }
     }
 }
+

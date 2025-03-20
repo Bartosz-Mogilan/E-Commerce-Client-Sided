@@ -1,18 +1,22 @@
 import request from "supertest";
 import app from "../server.js";
-import pool from "../config/db.js";
 
-afterAll(async () => {
-  await pool.end();
+let validToken = "";
+
+beforeAll(async () => {
+  const uniqueEmail = `testuser_users_${Date.now()}@example.com`;
+  const res = await request(app)
+    .post("/api/v1/auth/register")
+    .send({ username: "testuser_users", email: uniqueEmail, password: "test1234" });
+  validToken = res.body.token;
+  console.log("Registered token:", validToken);
 });
 
 describe("Users Endpoints", () => {
-  const dummyToken = "dummy-valid-token"; 
-
   it("should get the current user details", async () => {
     const res = await request(app)
       .get("/api/v1/users")
-      .set("Authorization", `Bearer ${dummyToken}`);
+      .set("Authorization", `Bearer ${validToken}`);
     expect(res.statusCode).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
   });
@@ -20,8 +24,12 @@ describe("Users Endpoints", () => {
   it("should get a specific user by id", async () => {
     const res = await request(app)
       .get("/api/v1/users/1")
-      .set("Authorization", `Bearer ${dummyToken}`);
+      .set("Authorization", `Bearer ${validToken}`);
     expect([200, 404, 403]).toContain(res.statusCode);
   });
 });
+
+
+
+
 

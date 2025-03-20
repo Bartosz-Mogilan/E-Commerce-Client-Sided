@@ -37,9 +37,11 @@ app.get("/", (req, res) => {
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+if(require.main === module) {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+}
 
 export default app;
 

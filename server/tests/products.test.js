@@ -1,10 +1,5 @@
 import request from "supertest";
 import app from "../server.js";
-import pool from "../config/db.js";
-
-afterAll(async () => {
-  await pool.end();
-});
 
 describe("Products Endpoints", () => {
   it("should fetch all products", async () => {
@@ -14,20 +9,35 @@ describe("Products Endpoints", () => {
   });
 
   it("should create a new product (requires auth)", async () => {
-    const dummyToken = "dummy-valid-token"; 
+    const uniqueEmail = `testuser_products_${Date.now()}@example.com`;
+    const regRes = await request(app)
+      .post("/api/v1/auth/register")
+      .send({ username: "testuser_products", email: uniqueEmail, password: "test1234" });
+    const validToken = regRes.body.token;
+    
     const productData = {
-      name: "Test Product",
-      description: "Test Description",
+      name: "Test Tech Product",
+      description: "This is a test product created during integration testing.",
       price: 99.99,
       stock: 10,
       category: "Tech",
-      imageUrl: "https://res.cloudinary.com/demo/image/upload/sample.jpg"
+      imageUrl: "https://res.cloudinary.com/deamdwd4t/image/upload/v1742307075/black-01-solobuds_dbkbu7.jpg"
     };
+
     const res = await request(app)
       .post("/api/v1/products")
-      .set("Authorization", `Bearer ${dummyToken}`)
+      .set("Authorization", `Bearer ${validToken}`)
       .send(productData);
-    expect([200, 401]).toContain(res.statusCode);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("id");
   });
 });
+
+
+
+
+
+
+
+
 

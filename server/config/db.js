@@ -20,6 +20,7 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: parseInt(process.env.DB_PORT, 10),
+  idleTimeoutMillis: 100,
 });
 
 // Test database connection
