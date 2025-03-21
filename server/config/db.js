@@ -1,8 +1,7 @@
+import dotenv from "dotenv";
+dotenv.config();
 import pkg from "pg";
 const { Pool } = pkg;
-import dotenv from "dotenv";
-
-dotenv.config();
 
 // Check for required environment variables
 const requiredVars = ['DB_USER', 'DB_HOST', 'DB_NAME', 'DB_PASSWORD', 'DB_PORT'];
@@ -37,3 +36,4 @@ const pool = new Pool({
 })();
 
 export default pool;
+

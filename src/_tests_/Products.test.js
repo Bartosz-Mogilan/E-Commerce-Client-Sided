@@ -1,10 +1,10 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import Products from "../pages/Products";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import Products from '../pages/Products';
 
-describe("Products Page", () => {
-  it("renders products page with search bar", () => {
+describe('Products Page', () => {
+  test('renders products page with search bar and heading', () => {
     render(
       <MemoryRouter>
         <Products />

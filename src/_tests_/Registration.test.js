@@ -1,10 +1,10 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import Registration from "../pages/Registration";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import Registration from '../pages/Registration';
 
-describe("Registration Page", () => {
-  it("renders registration form", () => {
+describe('Registration Page', () => {
+  test('renders registration form fields and button', () => {
     render(
       <MemoryRouter>
         <Registration />

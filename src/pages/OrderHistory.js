@@ -8,7 +8,13 @@ const OrderHistory = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/v1/orders', { credentials: 'include' })
+    const token = localStorage.getItem('token');
+    fetch('http://localhost:5000/api/v1/orders', {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    })
       .then(response => {
         if (response.status === 401) {
           navigate('/login');
@@ -30,8 +36,8 @@ const OrderHistory = () => {
       });
   }, [navigate]);
 
-  if(loading) {
-    return <div>Loading order history...</div>
+  if (loading) {
+    return <div>Loading order history...</div>;
   }
 
   if (error) {
@@ -69,7 +75,7 @@ const styles = {
   container: {
     padding: '2rem',
     maxWidth: '800px',
-    margin: '0 auto'
+    margin: '0 auto',
   },
   orderCard: {
     border: '1px solid #ccc',
@@ -77,13 +83,14 @@ const styles = {
     padding: '1rem',
     marginBottom: '1rem',
     backgroundColor: '#fff',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
   },
   item: {
-    padding: '0.5rem 0'
-  }
+    padding: '0.5rem 0',
+  },
 };
 
 export default OrderHistory;
+
 
 

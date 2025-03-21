@@ -1,11 +1,11 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import NavBar from "../components/NavBar";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import NavBar from '../components/NavBar';
 
-describe("NavBar Component", () => {
-  it("renders Login when no token is present", () => {
-    localStorage.removeItem("token");
+describe('NavBar Component', () => {
+  test('renders Login when no token is present', () => {
+    localStorage.removeItem('token');
     render(
       <MemoryRouter>
         <NavBar />
@@ -16,8 +16,8 @@ describe("NavBar Component", () => {
     expect(screen.queryByText(/Order History/i)).not.toBeInTheDocument();
   });
 
-  it("renders Order History and Log out when token is present", () => {
-    localStorage.setItem("token", "dummy-token");
+  test('renders Order History and Log out when token is present', () => {
+    localStorage.setItem('token', 'dummy-token');
     render(
       <MemoryRouter>
         <NavBar />
@@ -28,5 +28,10 @@ describe("NavBar Component", () => {
     expect(screen.queryByText(/Login/i)).not.toBeInTheDocument();
   });
 });
+
+
+
+
+
 
 

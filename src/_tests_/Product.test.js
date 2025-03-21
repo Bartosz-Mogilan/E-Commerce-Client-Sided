@@ -1,25 +1,26 @@
-// src/__tests__/Product.test.js
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import Product from "../components/Product";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import Product from '../components/Product';
 
-describe("Product Component", () => {
+describe('Product Component', () => {
   const product = {
     id: 1,
-    name: "Test Product",
-    description: "Test Description",
-    imageUrl: "https://res.cloudinary.com/demo/image/upload/sample.jpg"
+    name: 'Razer Huntsman V3 Pro',
+    description: 'High-end gaming keyboard featuring Razer optical switches and RGB lighting',
+    imageUrl: 'https://res.cloudinary.com/deamdwd4t/image/upload/v1742306595/razer-huntsman-v3-pro-hero-desktop-v3_scwicm.webp',
   };
 
-  it("renders product details", () => {
+  test('renders product details', () => {
     render(
       <MemoryRouter>
         <Product product={product} />
       </MemoryRouter>
     );
-    expect(screen.getByText(/Test Product/i)).toBeInTheDocument();
-    expect(screen.getByText(/Test Description/i)).toBeInTheDocument();
+    expect(screen.getByText(/Razer Huntsman V3 Pro/i)).toBeInTheDocument();
+    expect(screen.getByText(/High-end gaming keyboard/i)).toBeInTheDocument();
+    const image = screen.getByAltText(/Razer Huntsman V3 Pro/i);
+    expect(image).toHaveAttribute('src', product.imageUrl);
   });
 });
 
