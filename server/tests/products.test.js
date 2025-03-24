@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../server.js";
 
+
 describe("Products Endpoints", () => {
   it("should fetch all products", async () => {
     const res = await request(app).get("/api/v1/products");

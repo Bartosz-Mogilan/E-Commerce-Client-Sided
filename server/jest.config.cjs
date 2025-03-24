@@ -3,15 +3,13 @@ module.exports = {
   globalTeardown: "./tests/globalTeardown.mjs",
   testEnvironment: "node",
   transform: {
-    "^.+\\.js$": "babel-jest",
+    '^.+\\.js$': 'babel-jest'
   },
-  transformIgnorePatterns: [
-    "node_modules/(?!(strip-ansi|ansi-regex)/)"
-  ],
-  extensionsToTreatAsEsm: [], 
+  transformIgnorePatterns: [],
   moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1", 
-  },
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  }
 };
+
 
 

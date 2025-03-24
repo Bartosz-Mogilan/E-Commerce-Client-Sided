@@ -1,7 +1,13 @@
 import dotenv from "dotenv";
-dotenv.config();
+
+import { resolve } from "path";
+
+
 import pkg from "pg";
 const { Pool } = pkg;
+
+const envPath = resolve(process.cwd(), ".env");
+dotenv.config({ path: envPath });
 
 // Check for required environment variables
 const requiredVars = ['DB_USER', 'DB_HOST', 'DB_NAME', 'DB_PASSWORD', 'DB_PORT'];

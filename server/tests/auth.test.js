@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../server.js";
 
+
 describe("Authentication Endpoints", () => {
   const testUser = {
     username: "testuser_auth",
