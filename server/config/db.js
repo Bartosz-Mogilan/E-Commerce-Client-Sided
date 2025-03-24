@@ -1,8 +1,5 @@
 import dotenv from "dotenv";
-
 import { resolve } from "path";
-
-
 import pkg from "pg";
 const { Pool } = pkg;
 
@@ -42,4 +39,5 @@ const pool = new Pool({
 })();
 
 export default pool;
+
 
