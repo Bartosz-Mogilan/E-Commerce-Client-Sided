@@ -5,7 +5,37 @@ dotenv.config();
 
 const stripe = stripePackage(process.env.STRIPE_SECRET_KEY);
 
-// Create a Stripe payment intent
+/**
+ * @swagger
+ * tags:
+ *   name: Checkout
+ *   description: API endpoints for checkout and payment processing
+ */
+
+/**
+ * @swagger
+ * /api/v1/checkout/payment-intent:
+ *   post:
+ *     summary: Create a Stripe payment intent
+ *     description: Calculate the total price from the user's cart and create a Stripe payment intent.
+ *     tags: [Checkout]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Payment intent created successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 clientSecret:
+ *                   type: string
+ *       404:
+ *         description: Cart is empty.
+ *       500:
+ *         description: Error creating payment intent.
+ */
 export const createPaymentIntent = async (req, res) => {
   try {
     const cartResult = await pool.query(
@@ -34,7 +64,32 @@ export const createPaymentIntent = async (req, res) => {
   }
 };
 
-// Confirm checkout
+/**
+ * @swagger
+ * /api/v1/checkout/confirm:
+ *   post:
+ *     summary: Confirm the checkout process
+ *     description: Create an order from the user's cart items, move the items to the order, and clear the cart.
+ *     tags: [Checkout]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Checkout confirmed and order created.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 order:
+ *                   type: object
+ *       404:
+ *         description: Cart is empty.
+ *       500:
+ *         description: Error confirming checkout.
+ */
 export const confirmCheckout = async (req, res) => {
   try {
     const cartResult = await pool.query(

@@ -1,6 +1,47 @@
 import pool from "../config/db.js";
 
-// Get all products
+/**
+ * @swagger
+ * tags:
+ *   name: Products
+ *   description: API for product management
+ */
+
+/**
+ * @swagger
+ * /api/v1/products:
+ *   get:
+ *     summary: Retrieve a list of products
+ *     description: Retrieve a list of products. Optionally filter by category, with pagination support.
+ *     tags: [Products]
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter products by category.
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: Maximum number of products to return.
+ *       - in: query
+ *         name: offset
+ *         schema:
+ *           type: integer
+ *         description: Number of products to skip.
+ *     responses:
+ *       200:
+ *         description: A list of products.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       500:
+ *         description: Error retrieving products.
+ */
 export const getAllProducts = async (req, res) => {
   const { category, limit, offset } = req.query;
   try {
@@ -23,7 +64,34 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
-// Get a product by its ID
+/**
+ * @swagger
+ * /api/v1/products/{id}:
+ *   get:
+ *     summary: Retrieve a single product by ID
+ *     description: Retrieve a product's details by its unique ID.
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The product ID.
+ *     responses:
+ *       200:
+ *         description: Product details.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       400:
+ *         description: Invalid product ID.
+ *       404:
+ *         description: Product not found.
+ *       500:
+ *         description: Error retrieving product.
+ */
 export const getProductById = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {
@@ -43,7 +111,52 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// Create a new product
+/**
+ * @swagger
+ * /api/v1/products:
+ *   post:
+ *     summary: Create a new product
+ *     description: Add a new product to the database.
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - description
+ *               - price
+ *               - stock
+ *               - category
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               stock:
+ *                 type: integer
+ *               category:
+ *                 type: string
+ *               imageUrl:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Product created successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       400:
+ *         description: Missing required fields.
+ *       500:
+ *         description: Error creating product.
+ */
 export const createProduct = async (req, res) => {
   const { name, description, price, stock, category, imageUrl } = req.body;
   if (!name || !description || !price || !stock || !category) {
@@ -61,7 +174,55 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// Update an existing product
+/**
+ * @swagger
+ * /api/v1/products/{id}:
+ *   put:
+ *     summary: Update an existing product
+ *     description: Update the details of an existing product.
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The product ID.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               stock:
+ *                 type: integer
+ *               category:
+ *                 type: string
+ *               imageUrl:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Product updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       400:
+ *         description: Invalid product ID.
+ *       404:
+ *         description: Product not found.
+ *       500:
+ *         description: Error updating product.
+ */
 export const updateProduct = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   const { name, description, price, stock, category, imageUrl } = req.body;
@@ -85,7 +246,32 @@ export const updateProduct = async (req, res) => {
   }
 };
 
-// Delete a product
+/**
+ * @swagger
+ * /api/v1/products/{id}:
+ *   delete:
+ *     summary: Delete a product
+ *     description: Remove a product from the database.
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The product ID.
+ *     responses:
+ *       200:
+ *         description: Product deleted successfully.
+ *       400:
+ *         description: Invalid product ID.
+ *       404:
+ *         description: Product not found.
+ *       500:
+ *         description: Error deleting product.
+ */
 export const deleteProduct = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) {

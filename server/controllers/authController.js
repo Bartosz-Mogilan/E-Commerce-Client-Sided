@@ -4,7 +4,61 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Register user
+/**
+ * @swagger
+ * tags:
+ *   name: Authentication
+ *   description: API for user registration and login
+ */
+
+/**
+ * @swagger
+ * /api/v1/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     description: Create a new user account with username, email, and password.
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - email
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     username:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *       400:
+ *         description: Missing required fields or user already exists
+ *       500:
+ *         description: Error registering user
+ */
 export const register = async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
@@ -28,7 +82,42 @@ export const register = async (req, res) => {
   }
 };
 
-// Login user
+/**
+ * @swagger
+ * /api/v1/auth/login:
+ *   post:
+ *     summary: Log in an existing user
+ *     description: Authenticate a user with email and password.
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful, returns a token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       400:
+ *         description: Missing credentials or invalid credentials.
+ *       500:
+ *         description: Error logging in.
+ */
 export const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -55,9 +144,20 @@ export const login = async (req, res) => {
   }
 };
 
-// Logout user
+/**
+ * @swagger
+ * /api/v1/auth/logout:
+ *   get:
+ *     summary: Log out a user
+ *     description: Ends the user session.
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Logout successful.
+ */
 export const logout = (req, res) => {
   res.json({ message: "Logout successful" });
 };
+
 
 

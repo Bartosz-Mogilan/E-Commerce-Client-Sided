@@ -4,11 +4,25 @@ const swaggerOptions = {
     info: {
       title: "E-Commerce API",
       version: "1.0.0",
-      description: "An E-Commerce API built with Express and PostgreSQL",
+      description: "API documentation for the E-Commerce application",
     },
     servers: [
       {
         url: "http://localhost:5000",
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
       },
     ],
   },
@@ -16,6 +30,7 @@ const swaggerOptions = {
 };
 
 export default swaggerOptions;
+
 
 
   

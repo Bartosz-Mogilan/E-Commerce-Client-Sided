@@ -1,6 +1,33 @@
 import pool from "../config/db.js";
 
-// Get all orders with order items
+/**
+ * @swagger
+ * tags:
+ *   name: Orders
+ *   description: API endpoints for order management
+ */
+
+/**
+ * @swagger
+ * /api/v1/orders:
+ *   get:
+ *     summary: Retrieve all orders for the authenticated user
+ *     description: Get a list of all orders along with their items for the current user.
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of orders.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       500:
+ *         description: Error retrieving orders.
+ */
 export const getAllOrders = async (req, res) => {
   try {
     const result = await pool.query(
@@ -24,7 +51,34 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
-// Get an order by ID with order items
+/**
+ * @swagger
+ * /api/v1/orders/{id}:
+ *   get:
+ *     summary: Retrieve a specific order by ID
+ *     description: Get a single order along with its items. Only the owner of the order can access it.
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The order ID
+ *     responses:
+ *       200:
+ *         description: Order retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       404:
+ *         description: Order not found.
+ *       500:
+ *         description: Error retrieving order.
+ */
 export const getOrderById = async (req, res) => {
   const { id } = req.params;
   try {
